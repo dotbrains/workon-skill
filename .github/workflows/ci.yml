@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  markdown:
+    name: Markdown
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DavidAnson/markdownlint-cli2-action@v20
+        with:
+          globs: |
+            **/*.md
+
+  skill-validation:
+    name: Skill Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate SKILL frontmatter
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          skill_path = Path("SKILL.md")
+          if not skill_path.exists():
+              print("SKILL.md is missing")
+              sys.exit(1)
+
+          text = skill_path.read_text(encoding="utf-8")
+          match = re.match(r"^---\n(.*?)\n---\n", text, flags=re.DOTALL)
+          if not match:
+              print("SKILL.md must start with YAML frontmatter delimited by ---")
+              sys.exit(1)
+
+          frontmatter = match.group(1)
+          keys = {}
+          for line in frontmatter.splitlines():
+              if ":" not in line:
+                  continue
+              k, v = line.split(":", 1)
+              keys[k.strip()] = v.strip().strip('"').strip("'")
+
+          required = ["name", "description", "argument-hint"]
+          missing = [k for k in required if not keys.get(k)]
+          if missing:
+              print(f"Missing required frontmatter keys: {', '.join(missing)}")
+              sys.exit(1)
+
+          print("SKILL.md frontmatter validation passed")
+          PY
