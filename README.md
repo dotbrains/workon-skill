@@ -1,7 +1,28 @@
 # workon-skill
 
-[![CI](https://github.com/dotbrains/workon-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/dotbrains/workon-skill/actions/workflows/ci.yml)
-[![License: PolyForm Shield](https://img.shields.io/badge/License-PolyForm%20Shield-brightgreen.svg)](https://polyformproject.org/licenses/shield/1.0.0)
+> [!IMPORTANT]
+> **This repo has moved.** The canonical home for the `/workon` skill is now
+> [**dotbrains/skills**](https://github.com/dotbrains/skills), alongside the
+> rest of the dotbrains agent skills.
+>
+> Install with:
+>
+> ```bash
+> npx skills@latest add dotbrains/skills
+> ```
+>
+> Or copy the file directly:
+>
+> ```bash
+> mkdir -p ~/.claude/skills/workon
+> curl -fsSL https://raw.githubusercontent.com/dotbrains/skills/main/skills/workon/SKILL.md \
+>   -o ~/.claude/skills/workon/SKILL.md
+> ```
+>
+> This repository is archived and will not receive further updates. File
+> issues and PRs against [dotbrains/skills](https://github.com/dotbrains/skills).
+
+---
 
 Portable `/workon` skill for Linear-driven ticket execution:
 
@@ -10,39 +31,4 @@ Portable `/workon` skill for Linear-driven ticket execution:
 3. Watch PR health in a loop (AI review comments, CI, merge conflicts).
 4. Tear down the worktree after merge.
 
-```mermaid
-flowchart LR
-  A[Setup] --> B[Implement + PR]
-  B --> C[Watch Loop]
-  C --> D{Merged?}
-  D -- No --> C
-  D -- Yes --> E[Teardown]
-```
-
-## Repository layout
-
-- `SKILL.md` — canonical skill definition
-- `AGENTS.md` — contributor guidance for AI and human maintainers
-
-## Usage
-
-One-line install:
-
-```bash
-mkdir -p ~/.claude/skills/workon && curl -fsSL https://raw.githubusercontent.com/dotbrains/workon-skill/main/SKILL.md -o ~/.claude/skills/workon/SKILL.md
-```
-
-Install `SKILL.md` in your skills path, then invoke:
-
-```text
-/workon ENG-66
-```
-
-The skill is idempotent and stateful, so repeated invocations resume from the current phase.
-
-## Requirements
-
-- `git`
-- `gh` CLI authenticated against your GitHub host
-- Linear access (MCP integration or equivalent API tooling)
-- Loop scheduler support (for 5-minute watch ticks)
+See the canonical [`SKILL.md`](https://github.com/dotbrains/skills/blob/main/skills/workon/SKILL.md) in dotbrains/skills.
